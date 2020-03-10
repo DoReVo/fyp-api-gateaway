@@ -15,4 +15,4 @@ $router->get('/', function () use ($router) {
     return response('This is the api gateaway', 200);
 });
 
-$router->post('/payment', ['uses' => 'PaymentController@makePayment']);
+$router->post('/payment', ['middleware' => 'JWTAuth', 'uses' => 'PaymentController@makePayment']);

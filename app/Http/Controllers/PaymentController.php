@@ -27,7 +27,7 @@ class PaymentController extends Controller
                 'headers' =>
                 [
                     // JWT token from this request
-                    // 'Authorization' => 'Bearer ' . $token,
+                    'Authorization' => 'Bearer ' . $token,
                 ],
 
             ]
