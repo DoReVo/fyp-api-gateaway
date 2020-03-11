@@ -26,8 +26,9 @@ class PaymentController extends Controller
                 'base_uri' => getenv('PAYMENT_SERVICE_API'),
                 'headers' =>
                 [
-                    // JWT token from this request
-                    // 'Authorization' => 'Bearer ' . $token,
+                    // take session_id cookie from request to be used in http call
+                    // to invoice-service
+                    "Cookie" => 'session_id=' . $request->cookie('session_id'),
                 ],
 
             ]
@@ -47,9 +48,9 @@ class PaymentController extends Controller
                     ],
                 ]
             );
-            $data = json_decode($payment->getBody());
+            // $data = json_decode($payment->getBody());
 
-            return response()->json($data, 200);
+            return response($payment->getBody(), 200)->header('Content-Type', 'application/json');
         } catch (\Throwable $th) {
             return response()->json(array('error' => $th->getMessage()), 400);
         }
