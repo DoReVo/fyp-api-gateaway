@@ -14,16 +14,12 @@ class PaymentController extends Controller
      */
 
     private $httpClient;
-    private $data;
 
     public function __construct(Request $request)
     {
-
-        $this->data = $request;
         $token = $request->bearerToken();
         $this->httpClient = new Client(
             [
-                'base_uri' => getenv('PAYMENT_SERVICE_API'),
                 'headers' =>
                 [
                     // JWT token from this request
@@ -37,19 +33,9 @@ class PaymentController extends Controller
     public function makePayment()
     {
         try {
-            $payment = $this->httpClient->post(
-                'payment',
-                [
-                    'json' =>
-                    [
-                        'invoice_id' => $this->data->invoice_id,
-                        'amount' => $this->data->amount,
-                    ],
-                ]
-            );
-            $data = json_decode($payment->getBody());
-
-            return response()->json($data, 200);
+            $url = getenv('PAYMENT_SERVICE_API');
+            $payment = $this->httpClient->get($url);
+            return response($payment->getBody(), 200)->header('Content-Type', 'application/json');
         } catch (\Throwable $th) {
             return response()->json(array('error' => $th->getMessage()), 400);
         }
